@@ -1,0 +1,97 @@
+@using IP_MVC.Models
+@model IEnumerable<BL.Domain.Project>
+
+<button class="btn btn-blue" id="popupButton">Create New Project</button>
+@await Html.PartialAsync("_Create", new BL.Domain.Project())
+
+<div class="container-fluid">
+    <div class="row" id="projects">
+        @foreach (var project in Model)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 py-0">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        @{
+                            var randomIndex = new Random().Next(1, 3);
+                            var imageUrl = $"https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_{randomIndex}.png";
+                        }
+
+                        <div class="flip-card-front">
+                            <img src="@imageUrl" class="card-img-top w-100 h-100 z-1 position-relative" alt="Afbeelding_van_flow">
+
+                            <div class="show-project">
+                                <div class="card border-1 border-black position-absolute card-clickable" data-parent-flow-id="@project.Id">
+                                    <div class="front card-body overflow-y-scroll overflow-x-hidden">
+                                        <h5 class="card-title">@project.Name</h5>
+                                        <p class="card-text">@project.Description</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between px-sm-2 px-md-3 px-lg-4 px-xl-4">
+                                        <div class="btn-group">
+                                            <button class="btn bi bi-menu-button-wide btn-blue dropdown-toggle py-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-left background-color-light-blue min-vw-auto list-unstyled">
+                                                <li class="px-1 pb-1">
+                                                    <a class="btn btn-blue py-0 bi bi-trash" href="@Url.Action("Delete", "Project", new { parentFlowId = project.Id })" onclick="return confirm('Are you sure you want to delete this project?')"></a>
+                                                </li>
+                                                <li class="px-1">
+                                                    <a class="btn btn-blue py-0 bi bi-graph-up" href="@Url.Action("Analytic", "Analytic", new { projectId = project.Id })"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <button data-project-id="@project.Id" class="btn py-0 btn-blue edit-btn">Edit</button>
+                                        </div>
+                                        <div>
+                                            <a class="btn btn-blue py-0 startSessie" href="#">Start</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @await Html.PartialAsync("_StartSessie", project)
+                        </div>
+
+                        <div class="flip-card-back position-relative">
+                            <img src="@imageUrl" class="card-img-top w-100 h-100 z-1 position-relative" alt="Afbeelding_van_flow">
+                            <div class="card border-1 border-black h-50 position-absolute card-clickable" data-parent-flow-id="@project.Id">
+                                <div class="card-body overflow-y-scroll overflow-x-hidden">
+                                    <input type="hidden" id="id" value="@project.Id"/>
+                                    <input type="hidden" id="adminId" value="@project.AdminId"/>
+
+                                    <div class="form-group">
+                                        <label for="nameInput">Name</label>
+                                        <input type="text" class="form-control" id="nameInput" value="@project.Name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="descriptionInput">Description</label>
+                                        <input type="text" class="form-control" id="descriptionInput" value="@project.Description" required>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between button-container px-sm-2 px-md-3 px-lg-4 px-xl-4">
+                                    <div>
+                                        <button class="btn btn-blue bi bi-box-arrow-left btn-back py-0"></button>
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-blue py-0" id="updateProjectButton">Update</button>
+                                    </div>
+                                    <div class="btn-group p-0">
+                                        <button class="btn bi bi-menu-button-wide btn-blue dropdown-toggle p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right background-color-light-blue min-vw-auto">
+                                            <li class="px-1 pb-1">
+                                                <a class="btn btn-blue py-0 " href="@Url.Action("Flow", "Flow", new { projectId = project.Id })">Flows</a>
+                                            </li>
+                                            <li class="px-1">
+                                                <a class="btn btn-blue p-0" id="popupButton" href="@Url.Action("ManageFacilitators", "Project", new { projectId = project.Id })">Facilitators</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

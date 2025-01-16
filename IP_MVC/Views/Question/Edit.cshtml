@@ -1,0 +1,174 @@
+@using BL.Domain
+@using BL.Domain.Questions
+@using IP_MVC
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model BL.Domain.Questions.Question
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+
+    int min = ViewBag.Min ?? 0;
+    int max = ViewBag.Max ?? 10;
+}
+
+<body class="edit-question-page">
+<div class="container-fluid">
+    <img class="overlay-image position-absolute top-0 bottom-0 w-100 h-100" src="https://storage.googleapis.com/phygital-public/Flows/flow_halve_handjes.png" alt="Beschrijving van de afbeelding">
+    <div class="card border-1 border-black pt-3 h-75 position-relative">
+        <div class="big-card-content overflow-scroll">
+            <div class="row m-0 h-100" id="row">
+                <div class="col col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <input type="hidden" id="questionId" value="@Model?.Id">
+                    <input type="hidden" id="questionType" value="@Model?.Type">
+                    <input type="hidden" id="position" value="@Model?.Position">
+                    <input type="hidden" id="flowId" value="@Model?.FlowId">
+                    <div class="row h-100">
+                        <div class="col-12 pb-3">
+                            <div class="card card-left-above border-1 border-black card-clickable  p-2">
+                                <div class="small-container-left-above overflow-y-scroll">
+                                    <div class="d-flex align-items-center">
+                                        <p class="fw-bolder">Vraagtype:</p>
+                                        <p class="px-3">@Model?.Type</p>
+                                    </div>
+
+                                    <div id="titleContainer">
+                                        <h3 id="titleText">@Model?.Text</h3>
+                                        <input type="text" id="titleInput" class="d-none" value="@Model?.Text">
+                                    </div>
+                                </div>
+                                <div class="d-flex w-100 justify-content-center align-items-center position-sticky py-1">
+                                    <button class="btn btn-blue d-none" id="updateButton">Update</button>
+                                    <button class="btn btn-blue" id="editButton">Change</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card card-left-down border-1 border-black card-clickable overflow-y-scroll">
+                                <div class="py-3 d-flex justify-content-center">
+                                    <div>
+                                        <input id="mediaUpload" class="btn-blue" type="file" accept="image/*,video/*,audio/*"/>
+                                    </div>
+                                    <div class="px-3">
+                                        <button id="uploadButton" class="btn btn-blue">Upload</button>
+                                    </div>
+                                </div>
+                                <div class="w-25 d-flex align-self-center">
+                                    @if (Model.Media != null)
+                                    {
+                                        var mediaUrl = Model.Media.url;
+                                        var mediaType = Model.Media.type;
+
+                                        switch (mediaType)
+                                        {
+                                            case MediaType.VIDEO:
+                                                <div class="col py-2">
+                                                    <iframe src="@mediaUrl" class="img-fluid" alt="@Model.Media.description" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+                                                </div>
+                                                break;
+                                            case MediaType.IMAGE:
+                                                <div class="col py-2">
+                                                    <img src="@mediaUrl" class="img-fluid" alt="@Model.Media.description">
+                                                </div>
+                                                break;
+                                            case MediaType.AUDIO:
+                                                <div class="col py-2">
+                                                    <audio controls>
+                                                        <source src="@mediaUrl" alt="@Model.Media.description" type="audio/mpeg">
+                                                    </audio>
+                                                </div>
+                                                break;
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="card card-right border-1 border-black card-clickable overflow-y-scroll">
+                        <div class="small-container-right overflow-y-scroll">
+
+                            @switch (Model?.Type)
+                            {
+                                case QuestionType.Open:
+                                    // Open question doesn't need options, so redirect directly
+                                    break;
+                                case QuestionType.MultipleChoice:
+                                case QuestionType.SingleChoice:
+                                    // Add options to the question
+                                    <div class="w-100 p-2">
+                                        <h2 class="text-center">Add possible answers to the question</h2>
+                                        <div id="optionTable">
+                                            <!-- Options will be loaded here by the loadOptions function -->
+                                        </div>
+
+                                        <div class="w-100 d-flex justify-content-center pb-2">
+                                            <input class="btn-white" id="newOption" type="text" placeholder="Add an option"/>
+                                        </div>
+                                    </div>
+                                    break;
+                                case QuestionType.Range:
+                                    <form>
+                                        <p>Update range question</p>
+                                        <label for="min">Min value</label>
+                                        <input type="number" id="min" value="@min"/>
+                                        <label for="max">Max value</label>
+                                        <input type="number" id="max" value="@max"/>
+                                    </form>
+                                    break;
+                            }
+                        </div >
+                        @switch (Model?.Type)
+                        {
+                            case QuestionType.Open:
+                                break;
+                            case QuestionType.MultipleChoice:
+                            case QuestionType.SingleChoice:
+                                <div class="d-flex justify-content-between align-items-center position-sticky button-container overflow-x-scroll overflow-y-hidden py-1 bottom-0">
+                                    <div class="col d-flex justify-content-center h-100">
+
+                                        <button id="buttonToAdd" class="btn btn-blue">Add option</button>
+                                    </div>
+                                    @if (!ViewBag.IsLastQuestion)
+                                    {
+                                        <div class="col d-flex justify-content-center h-100">
+
+                                            <button id="addConditionalQuestionsButton" class="btn btn-blue">Add conditional questions</button>
+                                        </div>
+                                        <div class="col d-flex justify-content-center h-100">
+
+                                            <button id="saveQuestionButton" class="btn btn-blue">Save follow up questions</button>
+                                        </div>
+                                    }
+                                </div>
+                                break;
+                            case QuestionType.Range:
+                                <div class="d-flex justify-content-between align-items-center position-sticky button-container overflow-x-scroll overflow-y-hidden py-1 bottom-0">
+                                    <button id="updateRangeValues" class="btn btn-blue">Update</button>
+                                </div>
+
+                                break;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-3 d-flex justify-content-center align-items-center">
+            <div class="px-3">
+                <a class="btn btn-blue" href="@Url.Action("StartPreview", "Question", new { id = Model?.Id })">Show preview</a>
+
+            </div>
+            <div class="px-3">
+                <a href="@Url.Action("Edit", "Flow", new { parentFlowId = Model?.FlowId })" class="btn btn-blue">Go back to flow overview</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+@section scripts{
+    <script src="~/dist/editQuestion.entry.js" defer></script>
+}

@@ -1,0 +1,45 @@
+@using IP_MVC
+@model BL.Domain.Flow
+
+<div class="popup-overlay z-3" id="popupOverlay">
+    <img src="https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_2.png" class="card-img-top w-100 h-100 z-1 position-relative" alt="Afbeelding_van_flow">
+
+    <div class="popup" id="popup">
+        <span class="close" id="closePopup">&times;</span>
+        <div class="popup-content d-flex justify-content-center align-items-center position-relative">
+            <form class="w-100">
+                <h5 class="text-center mb-4">Create Flow</h5>
+
+                <div class="form-group">
+                    <label class="d-flex justify-content-start" for="NewNameInput">Name</label>
+                    <input id="NewNameInput" class="form-control"/>
+                </div>
+                <div class="form-group pb-3">
+                    <label class="d-flex justify-content-start" for="NewDescriptionInput">Description</label>
+                    <textarea id="NewDescriptionInput" class="form-control"></textarea>
+                </div>
+                <div class="form-group row pb-3">
+                    <div class="col">
+                        <label class="d-flex justify-content-start" for="NewStartDateInput">Start Date</label>
+                        <input id="NewStartDateInput" class="form-control" type="datetime-local"/>
+                    </div>
+                    <div class="col">
+                        <label class="d-flex justify-content-start" for="NewEndDateInput">End Date</label>
+                        <input id="NewEndDateInput" class="form-control" type="datetime-local"/>
+                    </div>
+                </div>
+                <input type="hidden" id="userRole" value='@(User.IsInRole(CustomIdentityConstants.AdminRole) || User.IsInRole(CustomIdentityConstants.PlatformAdminRole) ? "True" : "False")'/>
+                <input type="hidden" id="activeProject" value='@(ViewBag.ActiveProject ? "True" : "False")'/>
+                <input type="hidden" id="projectIdInput" value="@ViewBag.ProjectId"/>
+                <input type="hidden" id="parentFlowIdInput" value="@ViewBag.ParentFlowId"/>
+                <button type="button" class="btn btn-blue rounded-5" id="createFLowButton">Create Flow</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/dist/showPopUp.entry.js" defer></script>
+    <script src="~/dist/editFlow.entry.js" defer></script>
+}

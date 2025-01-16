@@ -1,0 +1,35 @@
+﻿###File can be used to test out api calls
+
+GET http://localhost:5143/api/templates
+
+###
+
+GET http://localhost:5143/api/templates/1
+
+###
+
+POST http://localhost:5143/api/templates/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 3,
+  "name": "Peperoni",
+  "price": 11.25
+}
+
+###
+
+PUT http://localhost:5143/api/templates/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 4,
+  "name": "calzone",
+  "price": 15
+}
+
+###
+
+DELETE http://localhost:5143/api/templates/3

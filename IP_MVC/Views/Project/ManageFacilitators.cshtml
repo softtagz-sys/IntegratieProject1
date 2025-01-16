@@ -1,0 +1,59 @@
+@model IP_MVC.Models.ManageFacilitatorsViewModel
+
+@{
+    ViewBag.Title = "Manage Facilitators";
+    Layout = "_Layout";
+}
+<body class="facilitator-page">
+<h5 class="d-flex justify-content-center display-5 ">Manage Facilitators</h5>
+<input type="hidden" id="projectId" value="@Model.ProjectId"/>
+<input type="hidden" id="amountOfFacilitators" value="@Model.Facilitators.Count()"/>
+<input id="searchBox" class="form-control w-auto btn-blue" placeholder="Add Facilitator">
+<div id="searchResult">
+
+</div>
+<div class="container-fluid">
+    <div class="row" id="printFacilitators">
+        @if (!Model.Facilitators.Any())
+        {
+            <div class="col py-0 position-relative d-flex justify-content-center">
+                <img src="https://storage.googleapis.com/phygital-public/Facilitators/mannetje_2.png" class="men-img-no-facilitators" alt="Afbeelding_van_facilitator">
+
+                <div class="men-card-no-facilitators border-5 border-black position-absolute d-flex align-items-center justify-content-center card-clickable">
+                    <div class="px-3">
+                        No facilitators found
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var facilitator in Model.Facilitators)
+            {
+                <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 py-0 position-relative">
+                    @{
+                        var randomIndex = new Random().Next(1, 5);
+                        var imageUrl = $"https://storage.googleapis.com/phygital-public/Facilitators/mannetje_{randomIndex}.png";
+                    }
+                    <img src="@imageUrl" class="h-100 w-100" alt="Afbeelding_van_facilitator">
+
+                    <div class="men-card border-5 border-black position-absolute d-flex align-items-center justify-content-center card-clickable">
+                        <div class="px-3">
+                            @facilitator.UserName
+                        </div>
+                        <div class="px-3">
+                            <a class="btn py-0 bi bi-trash btn-blue" href="@Url.Action("RemoveUser", "Project", new { userId = facilitator.Id, projectId = Model.ProjectId })" onclick="return confirm('Are you sure you want to remove this facilitator?')"></a>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+</body>
+
+@section Scripts
+{
+    <script src="~/dist/manageFacilitators.entry.js" defer></script >
+}

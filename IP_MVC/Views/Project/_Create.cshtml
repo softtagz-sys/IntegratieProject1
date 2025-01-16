@@ -1,0 +1,24 @@
+@model BL.Domain.Project
+
+
+<div class="popup-overlay z-3" id="popupOverlay">
+    <img src="https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_2.png" class="card-img-top w-100 h-100 z-1 position-relative" alt="Afbeelding_van_flow">
+    <div class="popup" id="popup">
+        <span class="close" id="closePopup">&times;</span>
+        <div class="popup-content d-flex justify-content-center align-items-center position-relative w-75">
+            <form class="w-100" id="createProjectForm" method="post">
+                <h5 class="text-center mb-4">Create Project</h5>
+                
+                <div class="form-group pb-3">
+                    <label class="d-flex justify-content-start" asp-for="Name">Name</label>
+                    <input type="text" asp-for="Name" class="form-control" required>
+                </div>
+                <div class="form-group pb-3">
+                    <label class="d-flex justify-content-start" asp-for="Description">Description</label>
+                    <textarea type="text" asp-for="Description" class="form-control" required></textarea>
+                </div>
+                <button class="btn btn-blue rounded-5" id="createProjectButton">Create Project</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,111 @@
+@using BL.Domain
+@using IP_MVC
+@using IP_MVC.Helpers
+@using Tensorflow.Operations.Activation
+@model IEnumerable<BL.Domain.Flow>
+
+
+@{
+    ViewBag.Title = "SubFlows";
+    Layout = "_Layout";
+}
+
+<body class="subFlow-page overflow-hidden">
+<div class="border-2 px-3 d-flex align-items-center">
+    <a href="@Url.Action("Flow", "Flow", new { projectId = ViewBag.ProjectId })" class="btn-white btn bi bi-box-arrow-left py-1"></a>
+    
+    @if (User.IsInRole(CustomIdentityConstants.AdminRole) && !@ViewBag.ActiveProject)
+    {
+        <button class="btn btn-blue ml-2" id="popupButton">Create New SubFlow</button>
+        @await Html.PartialAsync("_CreateFlow", new BL.Domain.Flow())
+    }
+</div>
+
+
+
+<div class="swiper">
+    <div class="swiper-wrapper" id="swiper-element">
+        @foreach (var subFlow in Model)
+        {
+            @if ((User.IsInRole(CustomIdentityConstants.AdminRole) && !@ViewBag.ActiveProject) || (User.IsInRole(CustomIdentityConstants.PlatformAdminRole) && !@ViewBag.ActiveProject) || ViewBag.ContainsQuestions[subFlow.Id])
+            {
+                <div class="swiper-slide">
+                    <div class="slide-card">
+
+                        @{
+                            var randomIndex = new Random().Next(1, 5);
+                            var imageUrl = $"https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_{randomIndex}.png";
+                        }
+
+                        <img src="@imageUrl" class=" card-img-top w-100 vh-100 position-relative z-1" alt="Afbeelding_van_flow">
+                        <div class="card border-1 border-black h-50 position-absolute card-clickable">
+                            <div class="align-items-center h-100 overflow-y-scroll">
+                                <div class="card-body ">
+                                    <h5 class="card-title">@subFlow.Name</h5>
+                                    <p class="card-text">@subFlow.Description</p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center px-3">
+                                @if (ViewBag.ContainsQuestions[subFlow.Id])
+                                {
+                                    <div class="form-check form-switch d-flex align-items-center">
+                                        <span class="form-check-label">1P</span>
+                                        <input class="form-check-input mx-2 classPlayerToggle" type="checkbox" id="playerToggle">
+                                        <span class="form-check-label">2P</span>
+                                    </div>
+                                }
+
+                                @if ((User.IsInRole(CustomIdentityConstants.AdminRole) || User.IsInRole(CustomIdentityConstants.PlatformAdminRole)) && !@ViewBag.ActiveProject)
+                                {
+                                    <div class="px-3">
+                                        <button class="btn bi bi-trash deleteFlowButton btn-white" data-flow-id="@subFlow.Id" href="@Url.Action("Delete", "Flow", new { flowId = subFlow.Id })"></button>
+                                    </div>
+                                }
+                                @if ((User.IsInRole(CustomIdentityConstants.AdminRole) || User.IsInRole(CustomIdentityConstants.PlatformAdminRole)) && !@ViewBag.ActiveProject)
+                                {
+                                    <div class="px-3">
+                                        <a class="btn btn-white py-0 h-100 align-content-center" href="@Url.Action("Edit", "Flow", new { parentFlowId = subFlow.Id })">Edit</a>
+                                    </div>
+                                }
+                                <div class="px-3">
+                                    @if (ViewBag.ContainsQuestions[subFlow.Id])
+                                    {
+                                        @if (ViewBag.ActiveProject)
+                                        {
+                                            @if (!ViewBag.Circular)
+                                            {
+                                                <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = subFlow.Id, FlowType = FlowType.LINEAR })" class="btn btn-blue d-flex justify-content-center">Play Flow</a>
+                                            }
+                                            else if (ViewBag.Circular)
+                                            {
+                                                <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = subFlow.Id, FlowType = FlowType.CIRCULAR })" class="btn btn-blue d-flex justify-content-center">Play Flow</a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = subFlow.Id, FlowType = FlowType.LINEAR })" class="btn btn-blue">Play linaire Flow</a>
+                                            <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = subFlow.Id, FlowType = FlowType.CIRCULAR })" class="btn btn-blue">Play circulaire Flow</a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div >
+    <div class="swiper-button-prev position-fixed"></div>
+    <div class="swiper-button-next position-fixed"></div>
+    <div class="swiper-pagination swiper-pagination-bullet-active"></div>
+</div >
+
+</body >
+
+@section Scripts
+{
+    <script src="~/dist/createScroll.entry.js" defer></script>
+    <script src="~/dist/showPopUp.entry.js" defer></script>
+    <script src="~/dist/editFlow.entry.js" defer></script>
+    <script src="~/dist/playerCountUpdater.entry.js"></script>
+}

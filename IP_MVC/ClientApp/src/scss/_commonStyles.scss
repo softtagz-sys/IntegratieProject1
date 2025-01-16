@@ -1,0 +1,130 @@
+@import "_variables.scss";
+
+.youth-speak {
+  .up {
+    position: relative;
+    top: -0.3em;
+  }
+}
+.btn-blue {
+  border-color: $light-blue;
+  border-radius: 5em;
+  color: $dark-blue;
+  box-shadow: 0 0 40px 40px $light-blue inset, 0 0 0 0 $light-blue;
+  transition: all 150ms ease-in-out;
+
+  &:hover {
+    color: $dark-blue;
+    box-shadow: 0 0 10px 0 $blue inset, 0 0 10px 10px $yellow;
+  }
+}
+.btn-white {
+  border-radius: 5em;
+  color: $dark-blue;
+  box-shadow: 0 0 40px 40px white inset, 0 0 0 0 white;
+  transition: all 150ms ease-in-out;
+
+  &:hover {
+    color: $dark-blue;
+    box-shadow: 0 0 10px 0 $blue inset, 0 0 10px 10px $yellow;
+  }
+}
+.arrow-submit-right {
+  font-family: $signalcompressed-font, serif;
+  position: relative;
+  width: 3.5em;
+
+  &::after {
+    content: "\2192";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5em;
+  }
+}
+.arrow-submit-left {
+  font-family: $signalcompressed-font, serif;
+  position: relative;
+  width: 3.5em;
+
+  &::after {
+    content: "\2190";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5em;
+  }
+}
+.popup-overlay {
+  z-index: 999;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+
+  &.visible {
+    display: flex;
+  }
+  .popup {
+    font-family: Arial, sans-serif;
+    position: absolute;
+    overflow-y: scroll;
+    display: flex;
+    justify-content: center;
+    top: 40%;
+    height: 60vh;
+    width: 59%;
+    left: 50%;
+    border: 1px solid #000;
+    transform: translate(-50%, -50%);
+    background: #d0ebfc;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+
+    &:hover {
+      z-index: 999;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .popup-content {
+      text-align: center;
+      overflow-y: scroll;
+    }
+
+    .form-control {
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  }
+}
+
+.big-card-content {
+  height: 65vh;
+}
+.background-color-light-blue {
+  background-color: $light-blue;
+}
+.background-color-white {
+  background-color: #fff
+}
+
+img {
+  pointer-events: none;
+}

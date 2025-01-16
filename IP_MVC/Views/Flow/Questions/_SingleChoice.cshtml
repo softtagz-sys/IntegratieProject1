@@ -1,0 +1,40 @@
+@using BL.Domain.Questions
+@model BL.Domain.Questions.SingleChoiceQuestion
+
+@{
+    var earlierAnswers = ViewData["earlierAnswer"] as BL.Domain.Answers.Answer;
+    var earlierAnswerPlayer1 = "";
+    var earlierAnswerPlayer2 = "";
+    if (earlierAnswers != null)
+    {
+        earlierAnswerPlayer1 = earlierAnswers.AnswerTextPlayer1;
+        earlierAnswerPlayer2 = earlierAnswers.AnswerTextPlayer2;
+    }
+    
+    var question = ViewData["questionType"] as SingleChoiceQuestion;
+    var playerCount = ViewBag.PlayerCount;
+}
+<div class="forms-container" id="formPlayers">
+    @if (question?.Options != null)
+    {
+        @for (var i = 0; i < question.Options.Count; i++)
+        {
+            var option = question.Options.ElementAt(i);
+            bool isSelectedPlayer1 = earlierAnswerPlayer1 != null && earlierAnswerPlayer1 == option.Text;
+            bool isSelectedPlayer2 = earlierAnswerPlayer2 != null && earlierAnswerPlayer2 == option.Text;
+            <div class="form-check m-3 box-container">
+                @if (playerCount >= 1)
+                {
+                    <input class="form-check-input" type="radio" id="checkPlayer1@i" name="AnswerPlayer1" value="@option.Text" @(isSelectedPlayer1 ? "checked" : "")>
+                }
+                @if (playerCount == 2)
+                {
+                    <input class="form-check-input" type="radio" id="checkPlayer2@i" name="AnswerPlayer2" value="@option.Text" @(isSelectedPlayer2 ? "checked" : "")>
+                }
+                <label class="form-check-label" for="checkPlayer2@i">
+                    @option.Text
+                </label>
+            </div>
+        }
+    }
+</div>

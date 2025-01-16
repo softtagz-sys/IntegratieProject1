@@ -1,0 +1,28 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using BL.Domain.Answers
+@model IP_MVC.Models.QuestionViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+
+}
+
+<div class="container open-question-page">
+    <div class="card">
+        <div class="card-header">
+            Open Question
+        </div>
+        <div class="card-body">
+            <form asp-controller="Flow" asp-action="SaveAnswerOpenQuestion" method="post">
+                <input type="hidden" name="flowId" value="@Model.Question.FlowId"/>
+                <input type="hidden" name="QuestionId" value="@Model.Question.Id"/>
+                <div class="form-group">
+                    <label for="answer">@Model.Question.Text</label>
+                    <textarea id="answer" class="form-control" name="Answer" rows="5" placeholder="Type hier uw antwoord..."></textarea>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

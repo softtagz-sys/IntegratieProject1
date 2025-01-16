@@ -1,0 +1,22 @@
+@import '../_variables.scss';
+
+.endFlow {
+  min-height: 100vh;
+  max-height: 100vh;
+
+  .card {
+    width: 58%;
+    height: 60%;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translate(-50%, -50%) translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+  }
+}

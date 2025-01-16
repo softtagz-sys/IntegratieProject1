@@ -1,0 +1,14 @@
+@model BL.Domain.Project
+
+<div class="show-warning d-none">
+    <div class="card border-1 border-black position-absolute card-clickable" data-parent-flow-id="@Model.Id">
+        <div class="front card-body overflow-y-scroll overflow-x-hidden">
+            <p class="d-flex align-self-center">Wil je de flows in het project lineair of circulair afspelen?</p>
+        </div>
+        <div class="d-flex justify-content-center px-sm-2 px-md-3 px-lg-4 px-xl-4">
+            <button class="btn btn-blue bi bi-box-arrow-left" id="backButton"></button>
+            <button class="btn btn-blue" id="circularButton" data-flow-id="@Model.Id">Circulair</button>
+            <button class="btn btn-blue" id="linearButton" data-flow-id="@Model.Id">Lineair</button>
+        </div>
+    </div>
+</div>·

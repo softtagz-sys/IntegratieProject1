@@ -1,0 +1,32 @@
+@import '../_variables.scss';
+
+.edit-question-page{
+  .card{
+    
+    &:hover{
+      z-index: 3;
+    }
+  }
+
+  .card-left-above{
+    height: 20vh;
+    
+    .small-container-left-above{
+      height: 16vh;
+    }
+  }
+  
+  .card-left-down{
+    height: 43vh;
+  }
+  
+  .card-right{
+    min-height: 65vh;
+    max-height: 65vh;
+    
+    .small-container-right{
+      height: 60vh;
+    }
+  }
+  
+}

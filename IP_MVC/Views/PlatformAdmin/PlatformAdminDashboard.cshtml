@@ -1,0 +1,26 @@
+@model IEnumerable<IP_MVC.Models.ProjectViewModel>
+
+<h1>Projects</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Project Details</th>
+        <th>Owner</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.Project.Name</td>
+        <td>@item.Owner.UserName</td>
+        <td>
+            @*<a href="@Url.Action("Edit", "Project", new { id = item.Project.Id })">Edit</a>*@
+            <a href="@Url.Action("Delete", "Project", new { id = item.Project.Id })">Delete</a>
+        </td>
+    </tr>
+    }
+    </tbody>
+</table>

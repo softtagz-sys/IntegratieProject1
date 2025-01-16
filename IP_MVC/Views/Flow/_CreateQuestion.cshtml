@@ -1,0 +1,45 @@
+@using IP_MVC
+@model BL.Domain.Questions.Question
+
+
+@{
+    ViewBag.ShowingQuestionPartial = true;
+}
+
+<div class="popup-overlay z-3" id="popupOverlay">
+    <img src="https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_2.png" class="card-img-top w-100 h-100 z-1 position-relative" alt="Afbeelding_van_flow">
+
+    <div class="popup" id="popup">
+        <span class="close" id="closePopup">&times;</span>
+        <div class="popup-content w-100 d-flex justify-content-center align-items-center">
+            <form class="w-75">
+                <h5 class="text-center mb-4">Create Question</h5>
+
+                <div class="form-group pb-3">
+                    <label class="d-flex justify-content-start" for="newQuestionType">Question Type</label>
+                    <select id="newQuestionType" name="Type" class="form-control">
+                        <option value="MultipleChoice">Multiple Choice</option>
+                        <option value="Open">Open</option>
+                        <option value="Range">Range</option>
+                        <option value="SingleChoice">Single choice</option>
+                    </select>
+                </div>
+
+                <div class="form-group pb-3">
+                    <label class="d-flex justify-content-start" for="newQuestionText">Question</label>
+                    <input type="text" class="form-control" id="newQuestionText" name="Text" required>
+                </div>
+
+                <input type="hidden" name="flowIdInput" id="flowIdInput" value="@Model.FlowId"/>
+                <button type="button" class="btn btn-blue rounded-5" id="createButton">Create Question</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/dist/showPopUp.entry.js" defer></script>
+    <script src="~/dist/createQuestion.entry.js" defer></script>
+}

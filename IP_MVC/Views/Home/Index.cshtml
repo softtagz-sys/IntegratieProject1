@@ -1,0 +1,31 @@
+﻿@model IEnumerable<BL.Domain.Project>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<body class="flow-page">
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var project in Model)
+        {
+            <div class="col col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <div class="position-relative">
+                    @{
+                        var randomIndex = new Random().Next(1, 5); 
+                        var imageUrl = $"https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_{randomIndex}.png";
+                    }
+                    <img src="@imageUrl" class="w-100 h-100 z-1 position-relative" alt="Afbeelding van de flow">
+                    <div class="card h-50 position-absolute ">
+                        <div class="card-body">
+                            <h5 class="card-title">@project.Name</h5>
+                            <p class="card-text">@project.Description</p>
+                        </div>
+                        <a href="@Url.Action("Flow", "Flow", new { projectId = project.Id })" id="arrow-submit" class="btn ms-auto py-4"></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+</body>

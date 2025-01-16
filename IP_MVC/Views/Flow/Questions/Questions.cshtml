@@ -1,0 +1,200 @@
+@using BL.Domain
+@using BL.Domain.Answers
+@using BL.Domain.Questions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IP_MVC.Models.QuestionViewModel
+
+@{
+    ViewBag.Title = "Question Progression";
+    Layout = "_Layout";
+
+    var currentIndex = ViewData["currentIndex"] as int? ?? 0;
+    var questionCount = ViewData["questionCount"] as int? ?? 0;
+    var earlierAnswer = ViewData["earlierAnswer"] as Answer;
+    var flowType = ViewBag.FlowType as FlowType? ?? FlowType.LINEAR;
+    ViewData["earlierAnswer"] = earlierAnswer;
+    ViewData["questionType"] = Model.Question;
+
+    //todo: give this in the viewbag controller, add a checkbox?
+    var facilitatorWatching = ViewBag.facilitatorWatching ?? true;
+    var preview = ViewBag.Preview ?? false;
+    var parentFlowId = ViewBag.ParentFlowId;
+}
+
+<body class="questions-page">
+<div class="container-fluid pt-3">
+    <img class="overlay-image position-absolute top-0 bottom-0 w-100 h-100" src="https://storage.googleapis.com/phygital-public/Flows/flow_halve_handjes.png" alt="Flow image being two half hands">
+    <div class="card border-1 border-black pt-2 position-relative align-items-center overflow-y-scroll">
+        <div class="row w-100 align-content-center">
+            @if (preview)
+            {
+                <div class="col-6 h-100">
+                    <a href="@Url.Action("Edit", "Question", new { questionId = Model.Question.Id })" class="btn-white btn bi bi-box-arrow-left py-1 h-100 align-items-center"></a>
+                </div>
+            }
+            else
+            {
+                @if (parentFlowId == null)
+                {
+                    <div class="col-6 h-100">
+                        <a href="@Url.Action("Flow", "Flow", new { projectId = ViewBag.ProjectId })" class="btn-white btn bi bi-box-arrow-left py-1 h-100  align-items-center"></a>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-6 h-100">
+                        <a href="@Url.Action("SubFlow", "Flow", new { parentFlowId })" class="btn-white btn bi bi-box-arrow-left py-1 h-100  align-items-center"></a>
+                    </div>
+                }
+            }
+        </div>
+        <div class="card-content vh-100 align-content-center w-100">
+            <div class="row m-1">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 align-content-center">
+                    @if (Model.Question.Media != null)
+                    {
+                        switch (Model.Question.Media.type)
+                        {
+                            case MediaType.VIDEO:
+                                <div class="col py-2 d-flex justify-content-center align-items-center">
+                                    <iframe src=@Model.Question.Media.url class="img-fluid w-100 h-100" alt="@Model.Question.Media.description" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+                                </div>
+                                break;
+                            case MediaType.IMAGE:
+                                <div class="col py-2 d-flex justify-content-center align-items-center">
+                                    <img src=@Model.Question.Media.url class="img-fluid w-100 h-100" alt="@Model.Question.Media.description">
+                                </div>
+                                break;
+                            case MediaType.AUDIO:
+                                <div class="col py-2 d-flex justify-content-center align-items-center">
+                                    <audio controls>
+                                        <source src=@Model.Question.Media.url alt="@Model.Question.Media.description" type="audio/mpeg">
+                                    </audio>
+                                </div>
+                                break;
+                        }
+                    }
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 align-content-center">
+                    <p class="text-start fw-bold">Question</p>
+                    <p>@Model.Question.Text</p>
+
+                    <form id="myForm" asp-controller="Flow" asp-action="SaveAnswerAndRedirect" method="post">
+                        @switch (@Model.QuestionType)
+                        {
+                            case QuestionType.Open:
+                                <img height="250" width="250" src="@ViewBag.QrImage" alt="Qr code image"/>
+                                break;
+                            case QuestionType.Range:
+                                @await Html.PartialAsync("Questions/_Range", new RangeQuestion())
+                                break;
+                            case QuestionType.MultipleChoice:
+                                @await Html.PartialAsync("Questions/_MultipleChoice", new MultipleChoiceQuestion())
+                                break;
+                            case QuestionType.SingleChoice:
+                                @await Html.PartialAsync("Questions/_SingleChoice", new SingleChoiceQuestion())
+                                break;
+                        }
+                        <br/>
+                        <input type="hidden" name="flowId" value="@Model.Question.FlowId"/>
+                        <input type="hidden" name="id" value="@Model.Question.Id"/>
+                        <input type="hidden" name="QuestionId" value="@Model.Question.Id"/>
+
+                        <input type="hidden" id="redirectedQuestionId" name="redirectedQuestionId" value="@currentIndex">
+
+                        <div class="d-flex justify-content-between align-items-center py-2">
+                            @if (flowType == FlowType.LINEAR)
+                            {
+                                <input type="hidden" id="NextOrPreviousButtonClicked" name="NextOrPreviousButtonClicked" value="false" />
+                                @if (currentIndex != 0)
+                                {
+                                    if (preview)
+                                    {
+                                        <button id="prevQuestionButton" type="submit" name="redirectedQuestionId@(currentIndex - 1)" form="myForm" class="btn btn-white arrow-submit-left" asp-controller="Flow" asp-action="RedirectTroughPreview"></button>
+                                    }
+                                    else
+                                    {
+                                        <button id="prevQuestionButton" type="submit" name="redirectedQuestionId@(currentIndex - 1)" form="myForm" class="btn btn-white arrow-submit-left" asp-controller="Flow" asp-action="SaveAnswerAndRedirect"></button>
+                                    }
+                                }
+
+                                @if (preview && currentIndex + 1 < questionCount)
+                                {
+                                    <button id="nextQuestionButton" type="submit" name="redirectedQuestionId@(currentIndex + 1)" form="myForm" class="btn btn-white arrow-submit-right" asp-controller="Flow" asp-action="RedirectTroughPreview"></button>
+                                }
+                                else if (!preview)
+                                {
+                                    <button id="nextQuestionButton" type="submit" name="redirectedQuestionId@(currentIndex + 1)" form="myForm" class="btn btn-white arrow-submit-right" asp-controller="Flow" asp-action="SaveAnswerAndRedirect"></button>
+                                }
+                            }
+                            else
+                            {
+                                <div class="row py-2">
+                                    <span id="countdown"></span>
+                                </div>
+                            }
+                        </div>
+                        @if (flowType == FlowType.LINEAR)
+                        {
+                            <div class="position-absolute py-1 top-0 end-0 dropdown">
+                                <button class="btn btn-blue dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Quick navigation
+                                </button>
+                                <ul class="dropdown-menu">
+                                    @for (var i = 0; i < questionCount; i++)
+                                    {
+                                        var index = i;
+                                        if (index == currentIndex)
+                                        {
+                                            if (preview)
+                                            {
+                                                <li>
+                                                    <button class="btn-white dropdown-item active-dropdown" form="myForm" type="submit" name="redirectedQuestionId@(index)" asp-controller="Flow" asp-action="RedirectTroughPreview">Question @(index + 1)</button>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn-white dropdown-item active-dropdown" form="myForm" type="submit" name="redirectedQuestionId@(index)" asp-controller="Flow" asp-action="SaveAnswerAndRedirect">Question @(index + 1)</button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (preview)
+                                            {
+                                                <li>
+                                                    <button class="btn-white dropdown-item" form="myForm" type="submit" name="redirectedQuestionId@(index)" asp-controller="Flow" asp-action="RedirectTroughPreview">Question @(index + 1)</button>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                    <button class="btn-white dropdown-item" form="myForm" type="submit" name="redirectedQuestionId@(index)" asp-controller="Flow" asp-action="SaveAnswerAndRedirect">Question @(index + 1)</button>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+            @if (facilitatorWatching && !preview)
+            {
+                <div class="d-flex align-content-center justify-content-center w-100">
+                    <button class=" btn-blue btn create-btn " id="popupButton">Pause</button>
+                    @await Html.PartialAsync("_CreateNote", new Note())
+                </div>
+            }
+        </div>
+    </div>
+</div>
+</body>
+
+@section Scripts
+{
+    <script src="~/dist/controlQuestions.entry.js" defer></script>
+    <script src="~/dist/redirectedQuestionId.entry.js" defer></script>
+    <script src="~/dist/goingToNextQuestionCircularFlow.entry.js" defer></script>
+    <script src="~/dist/range.entry.js" defer></script>
+}

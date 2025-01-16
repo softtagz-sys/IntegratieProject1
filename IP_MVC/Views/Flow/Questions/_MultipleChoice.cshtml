@@ -1,0 +1,37 @@
+@using BL.Domain.Questions
+@model BL.Domain.Questions.MultipleChoiceQuestion
+
+@{
+    var earlierAnswer = ViewData["earlierAnswer"] as BL.Domain.Answers.Answer;
+    var question = ViewData["questionType"] as MultipleChoiceQuestion;
+    var playerCount = ViewBag.PlayerCount;
+}
+
+<div class="forms-container" id="formPlayers">
+    @if (question?.Options != null)
+    {
+        var selectedOptionsPlayer1 = earlierAnswer != null ? earlierAnswer.AnswerTextPlayer1.Split('\n') : Array.Empty<string>();
+        var selectedOptionsPlayer2 = earlierAnswer != null && playerCount == 2 ? earlierAnswer.AnswerTextPlayer2.Split('\n') : Array.Empty<string>();
+
+        foreach (var option in question.Options)
+        {
+            bool isSelectedPlayer1 = selectedOptionsPlayer1.Contains(option.Text);
+            bool isSelectedPlayer2 = selectedOptionsPlayer2.Contains(option.Text);
+
+
+            <div class="form-check m-3 box-container">
+                @if (playerCount >= 1)
+                {
+                    <input class="form-check-input" type="checkbox" id="checkPlayer1@i" name="AnswerPlayer1" value="@option.Text" @(isSelectedPlayer1 ? "checked" : "")>
+                }
+                @if (playerCount == 2)
+                {
+                    <input class="form-check-input" type="checkbox" id="checkPlayer2@i" name="AnswerPlayer2" value="@option.Text" @(isSelectedPlayer2 ? "checked" : "")>
+                }
+                <label class="form-check-label" for="checkPlayer1@i">
+                    @option.Text
+                </label>
+            </div>
+        }
+    }
+</div>

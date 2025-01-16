@@ -1,0 +1,51 @@
+@using BL.Domain
+@model IEnumerable<Flow>
+
+@{
+ViewBag.Title = "Analytic";
+Layout = "_Layout";
+}
+<body class="analytics-page h-100">
+<img class="overlay-image position-absolute bottom-0 w-100 h-100" src="https://storage.googleapis.com/phygital-public/Flows/flow_halve_handjes.png" alt="Beschrijving van de afbeelding">
+
+<div class="card border-1 border-black py-0 position-relative">
+    <div class="big-card-content overflow-scroll">
+        <div class="row w-100 m-0">
+            <div class="col-6 p-3 d-flex">
+                <a href="@Url.Action("ProjectDashboard", "Project")" class="align-content-center btn bi bi-box-arrow-left py-0 h-100"></a>
+            </div>
+
+            <div class="col-6 dropdown p-3 d-flex justify-content-end">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Kies een flow
+                </button>
+                <ul class="dropdown-menu overflow-x-scroll w-100">
+                    @foreach (var flow in Model)
+                    {
+                    <li id="Flows">
+                        <button class="px-3 dropdown-item active-dropdown" type="submit" data-flow-id="@flow.Id">@(flow.Name)</button>
+                    </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-0 " id="chartsContainer">
+
+        </div>
+
+
+
+        <div id="notesContainer" class="row m-0 justify-content-center">
+        </div>
+
+    </div>
+</div>
+</body>
+
+
+@section Scripts
+{
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="~/dist/analytics.entry.js" defer></script>
+}

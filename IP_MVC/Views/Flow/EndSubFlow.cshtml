@@ -1,0 +1,55 @@
+@model IP_MVC.Models.EndSubFlowViewModel
+@{
+    ViewBag.Title = "End of SubFlow";
+    Layout = "_Layout";
+}
+
+<body class="endFlow overflow-y-hidden">
+@{
+    var randomIndex = new Random().Next(1, 5);
+    var imageUrl = $"https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_{randomIndex}.png";
+}
+
+<img src="@imageUrl" class=" card-img-top w-100 vh-100 z-1 position-relative" alt="Afbeelding_van_flow">
+
+<div class="card border-1 border-black position-absolute card-clickable">
+    <div class="align-items-center h-100 overflow-y-scroll">
+        <div class="card-body">
+            <h2>Thank You!</h2>
+            <h5 class="card-title">Summary of your answers:</h5>
+            <ul class="list-unstyled">
+                @foreach (var question in Model.Questions)
+                {
+                    var answer = Model.Answers.FirstOrDefault(a => a.QuestionId == question.Id);
+                    <li>
+                        <strong>Q:</strong> @question.Text
+                        <br/>
+                        <strong>Player 1's Answer:</strong> @answer?.AnswerTextPlayer1
+                        <br/>
+                        @if (!string.IsNullOrEmpty(answer?.AnswerTextPlayer2))
+                        {
+                            <text>
+                                <strong>Player 2's Answer:</strong> @answer?.AnswerTextPlayer2
+                            </text>
+                            <br/>
+                        }
+                    </li>
+                    <br/>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="d-flex text-center position-sticky py-2 button-container">
+        <div class="flex-grow-1">
+            @if (ViewBag.IsParentFlow)
+            {
+                <a href="@Url.Action("SubFlow", "Flow", new { parentFlowId = Model.FlowId })" class="btn btn-blue">Return to SubFlow</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Flow", "Flow", new { projectId = ViewBag.ProjectId })" class="btn btn-blue">Return to Flow</a>
+            }
+        </div>
+    </div>
+</div>
+</body>

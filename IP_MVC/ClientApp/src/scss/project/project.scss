@@ -1,0 +1,33 @@
+@import '../_variables.scss';
+@import "../flipCard";
+
+.project-page {
+  .card {
+    background-color: $light-blue;
+    width: 59%;
+    height: 45%;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translate(-50%, -50%) translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      z-index: 3;
+    }
+    
+    .card-body {
+      flex: 3;
+    }
+
+    .d-flex {
+      flex: 1;
+    }
+  }
+  
+  .dropdown-menu{
+    --bs-dropdown-min-width: auto;
+  }
+}

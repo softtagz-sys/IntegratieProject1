@@ -1,0 +1,43 @@
+@import '../_variables.scss';
+
+.facilitator-page {
+  .men-img-no-facilitators{
+    height: 80vh;
+    left: 50%;
+  }
+  .men-card-no-facilitators {
+    background-color: #d0ebfc;
+    width: 20%;
+    height: 10%;
+    border-radius: 1em;
+    top: 16%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translate(-50%, -50%) translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      z-index: 3;
+    }
+  }
+  
+  .men-card{
+    background-color: $light-blue;
+    width: 59%;
+    height: 10%;
+    border-radius: 1em;
+    top: 16%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translate(-50%, -50%) translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      z-index: 3;
+    }
+  }
+}

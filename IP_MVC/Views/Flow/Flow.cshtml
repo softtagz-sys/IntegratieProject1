@@ -1,0 +1,172 @@
+@using BL.Domain
+@using IP_MVC
+@using IP_MVC.Models
+@model IEnumerable<BL.Domain.Flow> 
+@inject BL.Interfaces.IFlowManager FlowManager
+
+@{
+    ViewBag.Title = "Flows";
+    Layout = "_Layout";
+}
+
+<body class="flow-page">
+<div class="container-fluid">
+    <img class="overlay-image position-absolute top-0 bottom-0 w-100 h-100" src="https://storage.googleapis.com/phygital-public/Flows/flow_halve_handjes.png" alt="Beschrijving van de afbeelding">
+
+    <div class="card border-1 border-black pt-3 h-75 position-relative">
+        <div class="big-card-content overflow-scroll">
+            <div class="row m-0" id="row">
+                @foreach (var flow in Model)
+                {
+                    @if ((User.IsInRole(CustomIdentityConstants.AdminRole) && !@ViewBag.ActiveProject) || (User.IsInRole(CustomIdentityConstants.PlatformAdminRole) && !@ViewBag.ActiveProject) || ViewBag.ContainsQuestions[flow.Id] || ViewBag.IsParentFlow[flow.Id])
+                    {
+                        <div class="col col-sm-12 col-md-6 col-lg-4 col-xl-4 pb-3">
+                            <div class="flip-card bg-transparent">
+                                <div class="flip-card-inner">
+                                    <div class="flip-card-front w-100">
+                                        <div class="small-card card border-1 border-black position-absolute card-clickable w-100" data-parent-flow-id="@flow.Id">
+                                            <div class="front card-body overflow-y-scroll overflow-x-hidden">
+                                                <h5 class="card-title">@flow.Name</h5>
+                                                <p class="card-text">@flow.Description</p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between  align-items-center position-sticky button-container overflow-x-scroll overflow-y-hidden px-3">
+                                                <div >
+                                                    @if (User.IsInRole(CustomIdentityConstants.AdminRole) && !@ViewBag.ActiveProject || User.IsInRole(CustomIdentityConstants.PlatformAdminRole) && !@ViewBag.ActiveProject)
+                                                    {
+                                                        <button class="btn-blue btn bi bi-trash deleteFlowButton" data-flow-id="@flow.Id" href="@Url.Action("Delete", "Flow", new { flowId = flow.Id })"></button>
+                                                    }
+                                                </div>
+                                                <div >
+                                                    @if (User.IsInRole(CustomIdentityConstants.AdminRole) && !@ViewBag.ActiveProject || User.IsInRole(CustomIdentityConstants.PlatformAdminRole) && !@ViewBag.ActiveProject)
+                                                    {
+                                                        <button data-edit-flow data-flow-id="@flow.Id" class="btn btn-blue py-0 edit-flow-btn">Edit</button>
+                                                    }
+                                                </div>
+
+                                                <div>
+                                                    @if (ViewBag.ContainsQuestions[flow.Id] && !ViewBag.IsParentFlow[flow.Id])
+                                                    {
+                                                        //add a toggle for player amount
+                                                        <div class="form-check form-switch d-flex align-items-center">
+                                                            <span class="form-check-label">1P</span>
+                                                            <input class="form-check-input mx-2 classPlayerToggle" type="checkbox" id="playerToggle">
+                                                            <span class="form-check-label">2P</span>
+                                                        </div>
+                                                        if (ViewBag.ActiveProject)
+                                                        {
+                                                            @if (!ViewBag.Circular)
+                                                            {
+                                                                <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = flow.Id, FlowType = FlowType.LINEAR })" class="btn btn-blue">Play Flow</a>
+                                                            }
+                                                            else if (ViewBag.Circular)
+                                                            {
+                                                                <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = flow.Id, FlowType = FlowType.CIRCULAR })" class="btn btn-blue">Play Flow</a>
+                                                            }
+                                                        }
+                                                        else if (!ViewBag.ActiveProject)
+                                                        {
+                                                            <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = flow.Id, FlowType = FlowType.LINEAR })" class="btn btn-blue">Play Linear</a>
+                                                            <a href="@Url.Action("PlayFlow", "Flow", new { parentFlowId = flow.Id, FlowType = FlowType.CIRCULAR })" class="btn btn-blue">Play Circular</a>
+                                                        }
+                                                    }
+                                                    else if (ViewBag.IsParentFlow[flow.Id])
+                                                    {
+                                                        @if (!ViewBag.Circular)
+                                                        {
+                                                            <a href="@Url.Action("SubFlow", "Flow", new { parentFlowId = flow.Id, circular = false })" class="btn btn-blue d-flex">Go to Subflows</a>
+                                                        }
+                                                        else if (ViewBag.Circular)
+                                                        {
+                                                            <a href="@Url.Action("SubFlow", "Flow", new { parentFlowId = flow.Id, circular = true })" class="btn btn-blue">Go to Subflows</a>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flip-card-back w-100 position-relative">
+                                        <div class="small-card card border-1 border-black card-clickable" data-parent-flow-id="@flow.Id">
+                                            <div class="card-body overflow-y-scroll overflow-x-hidden">
+                                                <input type="hidden" id="flowId" value="@flow.Id"/>
+
+                                                <div class="form-group">
+                                                    <label for="nameInput">Name</label>
+                                                    <input type="text" class="form-control" id="nameInput" value="@flow.Name" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="descriptionInput">Description</label>
+                                                    <input type="text" class="form-control" id="descriptionInput" value="@flow.Description" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between position-sticky button-container py-1">
+                                                <div>
+                                                    <button class="btn btn-blue btn bi bi-box-arrow-left py-0 btn-back"></button>
+                                                </div>
+                                                <div>
+                                                    <button type="submit" class="btn btn-blue py-0" id="updateFlowButton">Update</button>
+                                                </div>
+
+                                                <div>
+                                                    @if (ViewBag.IsParentFlow[flow.Id] && User.IsInRole(CustomIdentityConstants.AdminRole) || User.IsInRole(CustomIdentityConstants.PlatformAdminRole) && !ViewBag.ActiveProject)
+                                                    {
+                                                        <a class="btn btn-blue py-0" href="@Url.Action("SubFlow", "Flow", new { parentFlowId = flow.Id })">Edit SubFlows</a>
+                                                    }
+                                                    else if (!ViewBag.IsParentFlow[flow.Id] && User.IsInRole(CustomIdentityConstants.AdminRole) || User.IsInRole(CustomIdentityConstants.PlatformAdminRole) && !ViewBag.ActiveProject && !ViewBag.ContainsQuestions[flow.Id])
+                                                    {
+                                                        <div class="btn-group">
+                                                            <button class="btn bi bi-menu-button-wide btn-blue dropdown-toggle py-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right background-color-light-blue">
+                                                                <li class="px-1 pb-1">
+                                                                    <a class="btn btn-blue dropdown-item p-2 d-flex justify-content-center" href="@Url.Action("Edit", "Flow", new { parentFlowId = flow.Id })">Edit questions</a>
+                                                                </li>
+                                                                <li class="px-1">
+                                                                    <a class="btn btn-blue dropdown-item p-2  d-flex justify-content-center" href="@Url.Action("SubFlow", "Flow", new { parentFlowId = flow.Id })">Edit SubFlows</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                    else if (!ViewBag.IsParentFlow[flow.Id] && User.IsInRole(CustomIdentityConstants.AdminRole) || User.IsInRole(CustomIdentityConstants.PlatformAdminRole) && !ViewBag.ActiveProject && ViewBag.ContainsQuestions[flow.Id])
+                                                    {
+                                                        <a class="btn btn-blue py-0" href="@Url.Action("Edit", "Flow", new { parentFlowId = flow.Id })">Edit questions</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div >
+                            </div >
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="py-3 d-flex justify-content-center align-items-center">
+            @if ((User.IsInRole(CustomIdentityConstants.AdminRole) || User.IsInRole(CustomIdentityConstants.PlatformAdminRole)) && !@ViewBag.ActiveProject)
+            {
+                <div class="px-3">
+                    <a class="btn btn-blue" href="@Url.Action("ProjectDashboard", "Project")">Go back to projects</a>
+                </div>
+                <div class="px-3">
+                    <button class="btn btn-blue" id="popupButton">Create New Flow</button>
+                    @await Html.PartialAsync("_CreateFlow", new Flow())
+                </div>
+            }
+            @if (@ViewBag.ActiveProject)
+            {
+                <button class="btn btn-blue" id="stopProjectSessionButton">Stop Project Sessie</button>
+                @await Html.PartialAsync("_AskPasswordPopUp", new ExitFlowLoginModel())
+            }
+        </div>
+    </div >
+</div>
+</body>
+
+@section Scripts
+{
+    <script src="~/dist/showPopUp.entry.js" defer></script>
+    <script src="~/dist/editFlow.entry.js" defer></script>
+    <script src="~/dist/playerCountUpdater.entry.js"></script>
+}

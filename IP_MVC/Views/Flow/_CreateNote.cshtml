@@ -1,0 +1,27 @@
+@model BL.Domain.Note
+
+<div class="popup-overlay z-3" id="popupOverlay">
+    <img src="https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_2.png" class="card-img-top w-100 h-100 z-1 position-relative" alt="Afbeelding_van_flow">
+
+    <div class="popup" id="popup">
+        <span class="close" id="closePopup">&times;</span>
+        <div class="popup-content d-flex justify-content-center align-items-center position-relative w-100">
+            <form class="w-75" asp-controller="Note" asp-action="CreateNote" method="post">
+                <h5 class="text-center mb-4">Write a note</h5>
+
+                <div class="form-group pb-3 h-75">
+                    <label class="d-flex justify-content-start" asp-for="Content"></label>
+                    <textarea asp-for="Content" class="form-control h-100"></textarea>
+                </div>
+
+                <input type="hidden" asp-for="QuestionId" id="questionId" value="@ViewBag.QuestionId"/>
+                <button type="submit" class="btn btn-blue" id="createButton">Add note</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/dist/goingToNextQuestionCircularFlow.entry.js" defer></script>
+}

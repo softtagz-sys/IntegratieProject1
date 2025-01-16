@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - YOUTHSPEAKUP</title>
+    <script src="~/dist/site.entry.js" defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <link rel="stylesheet" href="~/dist/site.css">
+</head>
+<body>
+<header class="px-2 pt-1">
+    @{
+        var isLoginPage = ViewContext.RouteData.Values["Page"]?.ToString() == "/Account/Login";
+        var activeProject = ViewBag.ActiveProject as bool? ?? false;
+        var dashboard = ViewBag.Dashboard as bool? ?? false;
+    }
+
+    @if (!isLoginPage && !activeProject)
+    {
+        <nav class="navbar navbar-expand-lg navbar-expand-md navbar-toggleable-sm border-bottom box-shadow mb-3 p-0 rounded-5 z-3">
+            <div class="container-fluid">
+                <a class="px-3 navbar-brand youth-speak h-100 d-flex align-items-center" asp-area="" asp-controller="Project" asp-action="ProjectDashboard">YouthSpeak<span class="up">Up</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav list-unstyled text-decoration-none flex-grow-1 h-100 py-0">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && dashboard)
+                        {
+                            <ul class="navbar nav-pills h-100 d-flex list-unstyled" id="pills-tab" role="tablist">
+                                <li class="nav-item h-100" role="presentation">
+                                    <button class="btn btn-blue h-100 active d-flex justify-content-center" id="pills-My-projects-tab" data-bs-toggle="pill" data-bs-target="#pills-My-projects" type="button" role="tab" aria-controls="pills-My-projects" aria-selected="true">My projects</button>
+                                </li>
+                                <li class="nav-item h-100" role="presentation">
+                                    <button class="btn btn-blue h-100 custom-tab d-flex justify-content-center" id="pills-Shared-projects-tab" data-bs-toggle="pill" data-bs-target="#pills-Shared-projects" type="button" role="tab" aria-controls="pills-Shared-projects" aria-selected="false">Shared projects</button>
+                                </li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <li class="nav-item py-2 h-100">
+                                <a class="btn btn-blue h-100 nav-link text-dark d-flex justify-content-center" asp-area="" asp-controller="Project" asp-action="ProjectDashboard">Dashboard</a>
+                            </li>
+                        }
+                        <li class="nav-item py-2 h-100">
+                            <a class="btn btn-blue h-100 nav-link text-dark d-flex justify-content-center" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial"/>
+                </div>
+            </div>
+        </nav>
+    }
+    else
+    {
+        <h1 class="display-5 youth-speak pt-3 pb-1 text-center"> YouthSpeak<span class="up">Up</span></h1>
+    }
+</header>
+<div class="container-fluid">
+    <main role="main">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="footer text-muted z-3">
+    <div class="container ">
+        <i class="bi bi-c-circle youth-speak"></i> 2024 - YouthSpeak<span class="up">Up</span> - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,50 @@
+@using BL.Domain.Answers
+@using BL.Domain.Questions
+@model BL.Domain.Questions.RangeQuestion
+
+@{
+    var question = ViewData["questionType"]  as RangeQuestion ;
+    var playerCount = ViewBag.PlayerCount;
+    var earlierAnswers = ViewData["earlierAnswer"] as Answer;
+    var earlierAnswerPlayer1 = Model.Min;
+    var earlierAnswerPlayer2 = Model.Min;
+
+    if (earlierAnswers != null)
+    {
+        var stringValueEarlierAnswerPlayer1 = earlierAnswers.AnswerTextPlayer1;
+        if (stringValueEarlierAnswerPlayer1 != null)
+        {
+            int.TryParse(stringValueEarlierAnswerPlayer1, out earlierAnswerPlayer1);
+        }
+        var stringValueEarlierAnswerPlayer2 = earlierAnswers.AnswerTextPlayer2;
+
+        if (stringValueEarlierAnswerPlayer2 != null)
+        {
+            int.TryParse(stringValueEarlierAnswerPlayer2, out earlierAnswerPlayer2);
+        } }
+
+}
+
+<div class="slider-values" id="slider" style="display: flex; justify-content: space-between; padding-bottom: 10px;">
+    @for (int i = question!.Min; i <= question.Max; i++)
+    {
+        <span>@i</span>
+    }
+</div>
+<div class="forms-container" id="formPlayers">
+    @if (playerCount >= 1)
+    {
+        <input type="range" min="@question!.Min" max="@question.Max" value="@earlierAnswerPlayer1" id="rangeInputPlayer1" class="w-100"/>
+        <input type="hidden" id="selectedValuePlayer1" name="AnswerPlayer1" data-min="@question.Min" data-earlier-answer="@earlierAnswerPlayer1" value="@earlierAnswerPlayer1"/>
+    }
+    @if (playerCount == 2)
+    {
+        <input type="range" min="@question!.Min" max="@question.Max" value="@earlierAnswerPlayer2" id="rangeInputPlayer2" class="w-100"/>
+        <input type="hidden" id="selectedValuePlayer2" name="AnswerPlayer2" data-min="@question.Min" data-earlier-answer="@earlierAnswerPlayer2" value="@earlierAnswerPlayer2"/>
+    }
+    <br/>
+</div>
+
+@section Scripts {
+    <script src="~/dist/orderQuestions.entry.js"></script>
+}

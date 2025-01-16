@@ -1,0 +1,35 @@
+@model IEnumerable<BL.Domain.Project>
+
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var project in Model)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        @{
+                            var randomIndex = new Random().Next(1, 3);
+                            var imageUrl = $"https://storage.googleapis.com/phygital-public/Flows/flow_page_hands_{randomIndex}.png";
+                        }
+
+                        <div class="flip-card-front">
+                            <img src="@imageUrl" class="card-img-top w-100 h-100 z-1 position-relative" alt="Afbeelding_van_flow">
+                            <div class="show-project">
+                                <div class="card border-1 border-black h-50 position-absolute card-clickable" data-parent-flow-id="@project.Id">
+                                    <div class="front card-body overflow-y-scroll overflow-x-hidden">
+                                        <h5 class="card-title">@project.Name</h5>
+                                        <p class="card-text">@project.Description</p>
+                                    </div>
+                                    <div class="d-flex justify-content-center position-sticky button-container overflow-y-hidden">
+                                        <a class="btn btn-blue py-0 startSessie" href="#">Start</a>
+                                    </div>
+                                </div>
+                            </div>
+                            @await Html.PartialAsync("_StartSessie", project)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div >

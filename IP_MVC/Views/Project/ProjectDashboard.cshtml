@@ -1,0 +1,29 @@
+@model IP_MVC.Models.ProjectDashboardViewModel
+
+<body class="project-page">
+
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-My-projects" role="tabpanel" aria-labelledby="pills-My-projects-tab">
+        @if (!Model.AdminProjects.Any())
+        {
+            <h2 class="text-center">You have no projects</h2>
+        }
+        @await Html.PartialAsync("_MyProjects", Model.AdminProjects)
+    </div>
+    <div class="tab-pane fade" id="pills-Shared-projects" role="tabpanel" aria-labelledby="pills-Shared-projects-tab">
+        @if (!Model.FacilitatorProjects.Any())
+        {
+            <h2 class="text-center">You have no shared projects</h2>
+        }
+        @await Html.PartialAsync("_SharedProjects", Model.FacilitatorProjects)
+    </div>
+</div>
+
+</body>
+
+
+@section Scripts
+{
+    <script src="~/dist/showPopUp.entry.js" defer></script>
+    <script src="~/dist/editProject.entry.js" defer></script>
+}

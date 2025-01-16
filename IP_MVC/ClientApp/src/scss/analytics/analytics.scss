@@ -1,0 +1,23 @@
+@import '../_variables.scss';
+
+.analytics-page {
+  .big-card-content {
+    height: 70vh;
+  }
+  .little-card {
+    height: 60vh;
+    background-color: $light-blue;
+
+    transition: z-index 0.3s;
+
+    &:hover {
+      z-index: 2;
+    }
+
+    .legend-color {
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+    }
+  }
+}

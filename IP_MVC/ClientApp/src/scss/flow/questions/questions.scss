@@ -1,0 +1,49 @@
+@import '../../_variables.scss';
+
+.questions-page {
+  .card {
+    height: 70vh;
+  }
+  
+  .card-content{
+   max-width: 80%;
+  }
+  .active-dropdown {
+    background-color: $light-blue;
+  }
+  .selected-option {
+    
+  }
+  .selected-option-player1 { /*player1*/
+    border: 2px solid black;
+    background-color: rgba(255, 0, 0, 0.5);
+  }
+
+  .selected-option-player2 { /*player2*/
+    border: 2px solid black;
+    background-color: rgba(0, 0, 255, 0.5);
+  }
+    
+  .forms-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  
+   .box-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+  }
+  
+  .box-container .form-check-input {
+      margin-right: 75px;
+  }
+  
+  .box-container .form-check-label {
+      flex-grow: 1;
+  }
+  
+}
+
+

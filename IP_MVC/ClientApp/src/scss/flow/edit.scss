@@ -1,0 +1,21 @@
+@import "../_variables.scss";
+
+.edit-page{
+  .row {
+    transition: z-index 0.3s;
+
+    &:hover {
+      z-index: 2;
+    }
+  }
+  
+  .table{
+    --bs-table-bg: $light-blue;
+    --bs-table-border-color: $yellow;
+  }
+
+  .flow-card{
+    height: 40%;
+  }
+}
+

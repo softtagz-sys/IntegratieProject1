@@ -1,0 +1,17 @@
+@import '../_variables.scss';
+@import '../_flipCard.scss';
+
+.flow-page {
+  .col {
+    transition: z-index 0.3s;
+
+    &:hover {
+      z-index: 2;
+    }
+
+  }
+  .small-card {
+    background-color: $light-blue;
+    height: 20vh;
+  }
+}

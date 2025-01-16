@@ -1,0 +1,23 @@
+import '@popperjs/core';
+import 'bootstrap';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+// Custom CSS imports
+import '../scss/_variables.scss'
+import '../scss/_commonStyles.scss'
+import '../scss/login.scss'
+import '../scss/project/project.scss'
+import '../scss/project/facilitator.scss'
+import '../scss/flow/subFlow.scss'
+import '../scss/flow/edit.scss'
+import '../scss/flow/flow.scss'
+import '../scss/flow/endFlow.scss'
+import '../scss/flow/questions/questionCompleet.scss';
+import '../scss/flow/questions/openQuestion.scss';
+import '../scss/flow/questions/questions.scss'
+import '../scss/question/edit.scss'
+import '../scss/site.scss';
+import '../scss/analytics/analytics.scss';
